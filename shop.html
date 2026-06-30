@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BADDIES BRAZZA — Boutique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0d0010;
+    color: #fff;
+    font-family: 'Inter', Arial, sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+  .anton { font-family: 'Anton', sans-serif; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #FF1493, #b300ff, #FF1493);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 999;
+  }
+  @keyframes shimmer { to { background-position: 200% 0; } }
+
+  nav {
+    position: sticky;
+    top: 3px;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 14px 10px;
+    background: rgba(13,0,16,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #3a0030;
+  }
+  nav a {
+    color: #d9a8c5;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 0;
+    width: 0%; height: 2px;
+    background: #FF1493;
+    transition: width 0.25s;
+  }
+  nav a:hover {
+    color: #FF1493;
+    transform: translateY(-1px);
+  }
+  nav a:hover::after { width: 100%; }
+
+  header {
+    text-align: center;
+    padding: 60px 20px 36px;
+    background: linear-gradient(180deg, #1a0017 0%, #0d0010 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  header .logo {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: #FF1493;
+    font-weight: 700;
+    margin-bottom: 10px;
+    animation: fadeDown 0.6s ease both;
+  }
+  header h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: 56px;
+    letter-spacing: 1px;
+    line-height: 1;
+    background: linear-gradient(90deg, #fff 30%, #FF1493 70%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: fadeUp 0.7s ease both, glide 6s ease-in-out infinite;
+  }
+  header p {
+    color: #d9a8c5;
+    font-size: 14px;
+    margin-top: 10px;
+    animation: fadeUp 0.9s ease both;
+  }
+  @keyframes fadeDown { from { opacity:0; transform: translateY(-12px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes glide { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+
+  .drop {
+    max-width: 1000px;
+    margin: 0 auto 70px;
+    padding: 0 20px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .drop.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .drop-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tier-tag {
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    transition: transform 0.2s;
+  }
+  .tier-tag:hover { transform: scale(1.08); }
+  .tier-standard { background: #FF1493; color: #fff; }
+  .tier-medium { background: #ffffff; color: #0d0010; }
+  .tier-premium {
+    background: linear-gradient(90deg, #FF1493, #b300ff, #FF1493);
+    background-size: 200% 100%;
+    color: #fff;
+    animation: glide 4s linear infinite;
+  }
+
+  .drop-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.5px;
+  }
+
+  .poster {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    background: #1a0017;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 40px rgba(255,20,147,0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .poster:hover {
+    transform: scale(1.015);
+    box-shadow: 0 16px 50px rgba(255,20,147,0.4);
+  }
+  .poster.contain { object-fit: contain; background: #fff; }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .gallery img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid #3a0030;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+  }
+  .gallery img:hover {
+    transform: scale(1.04) rotate(-0.5deg);
+    border-color: #FF1493;
+  }
+
+  .info-box {
+    background: #1a0017;
+    border: 1px solid #3a0030;
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.3s;
+  }
+  .info-box:hover { border-color: #5a0048; }
+  .price {
+    font-family: 'Anton', sans-serif;
+    font-size: 36px;
+    color: #FF1493;
+    margin-bottom: 4px;
+    transition: letter-spacing 0.3s;
+  }
+  .price-note {
+    font-size: 12px;
+    color: #9c7188;
+    margin-bottom: 18px;
+  }
+
+  .sizes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .size-btn {
+    background: transparent;
+    border: 1px solid #FF1493;
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .size-btn:hover {
+    background: rgba(255,20,147,0.15);
+    transform: translateY(-2px);
+  }
+  .size-btn.active {
+    background: #FF1493;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(255,20,147,0.5);
+  }
+  .size-btn.active:hover { transform: scale(1.05) translateY(-2px); }
+
+  .colors {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .color-btn {
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #555;
+    transition: all 0.15s ease;
+  }
+  .color-white { background: #fff; color: #0d0010; }
+  .color-black { background: #000; color: #fff; border: 1px solid #555; }
+  .color-btn:hover { transform: translateY(-2px); }
+  .color-btn.active {
+    outline: 2px solid #FF1493;
+    transform: scale(1.05);
+  }
+
+  .order-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #25D366;
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+    padding: 17px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
+    box-shadow: 0 6px 20px rgba(37,211,102,0.0);
+  }
+  .order-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,211,102,0.4);
+    background: #2fe077;
+  }
+  .order-btn:active { transform: translateY(0) scale(0.98); }
+
+  .desc {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #c9a0bb;
+    line-height: 1.6;
+  }
+
+  .perk {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #ffd700;
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.3);
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b3a55;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  @media (min-width: 700px) {
+    .drop-content {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">BAD DIES</div>
+  <h1 class="anton">BADDIES BRAZZA</h1>
+  <p>3 drops. 3 niveaux. Commande directe via WhatsApp.</p>
+</header>
+
+<nav>
+  <a href="#standard">Standard</a>
+  <a href="#medium">Medium</a>
+  <a href="#premium">Premium</a>
+</nav>
+
+<!-- DROP 1 — STANDARD -->
+<section class="drop" id="standard">
+  <div class="drop-header">
+    <div class="drop-title anton">I'm a Real Baddies</div>
+    <span class="tier-tag tier-standard">Standard</span>
+  </div>
+  <div class="drop-content">
+    <div>
+      <img class="poster" src="images/I_M_A_REAL___6.png" alt="Affiche I'm a Real Baddies">
+      <div class="gallery">
+        <img src="images/I_M_REAL_BADDIES.jpg" alt="T-shirt I'm a Real Baddies">
+      </div>
+    </div>
+    <div class="info-box">
+      <div class="price">9 000 FCFA</div>
+      <div class="price-note">Précommande — 7 500 FCFA pour les 20 premières pièces</div>
+
+      <div class="sizes">
+        <button class="size-btn" data-size="S">S</button>
+        <button class="size-btn" data-size="M">M</button>
+        <button class="size-btn" data-size="L">L</button>
+        <button class="size-btn" data-size="XL">XL</button>
+        <button class="size-btn" data-size="XXL">XXL</button>
+      </div>
+
+      <div class="colors">
+        <button class="color-btn color-white" data-color="Blanc">Blanc</button>
+        <button class="color-btn color-black" data-color="Noir">Noir</button>
+      </div>
+
+      <a href="#" class="order-btn" id="order-standard" target="_blank">Commander sur WhatsApp</a>
+
+      <p class="desc">T-shirt oversize, impression DTF face et dos. Le t-shirt d'entrée dans l'univers BADDIES — simple, direct, pour celles qui assument le statut.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DROP 2 — MEDIUM -->
+<section class="drop" id="medium">
+  <div class="drop-header">
+    <div class="drop-title anton">Bad by Nature</div>
+    <span class="tier-tag tier-medium">Medium</span>
+  </div>
+  <div class="drop-content">
+    <div>
+      <img class="poster" src="images/Bad.png" alt="Affiche Bad by Nature">
+      <div class="gallery">
+        <img src="images/BAD_BY_NATURE.png" alt="T-shirt Bad by Nature">
+      </div>
+    </div>
+    <div class="info-box">
+      <div class="price">12 000 FCFA</div>
+      <div class="price-note">Bundle 2 pièces : 20 000 FCFA</div>
+
+      <div class="sizes">
+        <button class="size-btn" data-size="S">S</button>
+        <button class="size-btn" data-size="M">M</button>
+        <button class="size-btn" data-size="L">L</button>
+        <button class="size-btn" data-size="XL">XL</button>
+        <button class="size-btn" data-size="XXL">XXL</button>
+      </div>
+
+      <div class="colors">
+        <button class="color-btn color-white" data-color="Blanc">Blanc</button>
+        <button class="color-btn color-black" data-color="Noir">Noir</button>
+      </div>
+
+      <a href="#" class="order-btn" id="order-medium" target="_blank">Commander sur WhatsApp</a>
+
+      <p class="desc">Impression photo + logo poche. Design plus travaillé, pour celles qui veulent se démarquer sans encore viser le tier Premium.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DROP 3 — PREMIUM -->
+<section class="drop" id="premium">
+  <div class="drop-header">
+    <div class="drop-title anton">Certifiée Baddies</div>
+    <span class="tier-tag tier-premium">Premium</span>
+  </div>
+  <div class="drop-content">
+    <div>
+      <img class="poster contain" src="images/baddies_10.png" alt="Logo Certifiée Baddies">
+      <div class="gallery">
+        <img src="images/CERTIFIED.png" alt="T-shirt Certifiée Baddies">
+      </div>
+    </div>
+    <div class="info-box">
+      <div class="price">16 000 FCFA</div>
+      <div class="price-note">Inclut la carte de certification + accès au programme de fidélité</div>
+
+      <div class="sizes">
+        <button class="size-btn" data-size="S">S</button>
+        <button class="size-btn" data-size="M">M</button>
+        <button class="size-btn" data-size="L">L</button>
+        <button class="size-btn" data-size="XL">XL</button>
+        <button class="size-btn" data-size="XXL">XXL</button>
+      </div>
+
+      <div class="colors">
+        <button class="color-btn color-white" data-color="Blanc">Blanc</button>
+        <button class="color-btn color-black" data-color="Noir">Noir</button>
+      </div>
+
+      <a href="#" class="order-btn" id="order-premium" target="_blank">Commander sur WhatsApp</a>
+
+      <div class="perk">★ Avec ce t-shirt, tu reçois ta carte "Certified Baddies" + un QR code à usage unique donnant 20% de réduction sur ton prochain achat.</div>
+
+      <p class="desc">Le tier exclusif. Statut, reconnaissance, et accès à des réductions futures réservées aux détenteurs de la carte.</p>
+    </div>
+  </div>
+</section>
+
+<footer>BADDIES4EVER — BRAZZAVILLE</footer>
+
+<script>
+  const WHATSAPP_NUMBER = "242067791826";
+
+  function setupDrop(dropId, productName, basePrice) {
+    const section = document.getElementById(dropId);
+    let selectedSize = null;
+    let selectedColor = null;
+
+    section.querySelectorAll('.size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        section.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSize = btn.dataset.size;
+        updateLink();
+      });
+    });
+
+    section.querySelectorAll('.color-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        section.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedColor = btn.dataset.color;
+        updateLink();
+      });
+    });
+
+    function updateLink() {
+      const link = section.querySelector('.order-btn');
+      let msg = `Bonjour, je veux commander : ${productName}`;
+      if (selectedColor) msg += ` - Couleur ${selectedColor}`;
+      if (selectedSize) msg += ` - Taille ${selectedSize}`;
+      msg += ` - Prix ${basePrice}`;
+      link.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    }
+
+    updateLink();
+  }
+
+  setupDrop('standard', "I'm a Real Baddies (Standard)", "9000 FCFA");
+  setupDrop('medium', "Bad by Nature (Medium)", "12000 FCFA");
+  setupDrop('premium', "Certifiée Baddies (Premium)", "16000 FCFA");
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.drop').forEach(el => observer.observe(el));
+
+  // Ripple effect on order buttons
+  document.querySelectorAll('.order-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const ripple = document.createElement('span');
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.position = 'absolute';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+      ripple.style.background = 'rgba(255,255,255,0.5)';
+      ripple.style.borderRadius = '50%';
+      ripple.style.transform = 'scale(0)';
+      ripple.style.transition = 'transform 0.5s, opacity 0.5s';
+      ripple.style.pointerEvents = 'none';
+      btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+      btn.appendChild(ripple);
+      requestAnimationFrame(() => { ripple.style.transform = 'scale(1.6)'; ripple.style.opacity = '0'; });
+      setTimeout(() => ripple.remove(), 500);
+    });
+  });
+</script>
+
+</body>
+</html>
